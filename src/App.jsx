@@ -30,7 +30,8 @@ function App() {
     const [postFormState, setPostFormState] = useState({
         user: "",
         content: "",
-        hashtags: []
+        hashtags: [],
+        image: null
     });
 
     useEffect(() => {
@@ -40,7 +41,7 @@ function App() {
     const handleGetPosts = async () => {
         setLoading(true);
         const response = await SearchService.getPosts();
-        if (response && response.status) {
+        if (response) {
             setPosts(response.data);
         } else {
             setPosts([]);
@@ -69,24 +70,46 @@ function App() {
         setLoading(false);
     }
 
-    const handleCreatePost = async (post) => {
+    const handleCreatePost = async () => {
         setLoading(true);
-        const response = await SearchService.createPost(post);
-        if (response && response.status) {
+        const formData = new FormData();
+        formData.append('user', postFormState.user);
+        formData.append('content', postFormState.content);
+        if (postFormState.hashtags) {
+            postFormState.hashtags.forEach((hashtag, index) => {
+                formData.append(`hashtags[${index}]`, hashtag);
+            });
+        }
+        formData.append('image', postFormState.image);
+
+        const response = await SearchService.createPost(formData);
+        if (response) {
             setPosts(response.data);
         } else {
             setPosts([]);
-
         }
+
         setLoading(false);
         setPostFormState({
             user: "",
             content: "",
-            hashtags: []
+            hashtags: [],
+            image: null
         });
+
         setOpenModal(false);
         handleGetPosts();
     };
+
+    const handleFileChange = (event) => {
+        console.log('here');
+        const file = event.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.addEventListener("load", () => {
+            setPostFormState({ ...postFormState, image: fileReader.result });
+        });
+        fileReader.readAsDataURL(file);
+    }
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -195,6 +218,14 @@ function App() {
                             onChange={(e) =>
                                 setPostFormState({ ...postFormState, content: e.target.value })
                             }
+                        />
+                        <TextField
+                            id="upload-button"
+                            type="file"
+                            accept="image/jpeg,image/png"
+                            fullWidth
+                            variant="standard"
+                            onChange={handleFileChange}
                         />
                         <TextField
                             id="name"

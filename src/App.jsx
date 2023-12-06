@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // Mui
 import Typography from '@mui/material/Typography';
+import CardMedia from '@mui/material/CardMedia';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -18,6 +19,8 @@ import SearchService from "./services/posts.service";
 import HashtagResultCard from './components/HashtagResultCard'
 import Loader from "./components/Loader";
 
+// Image
+import TTAGZLogo from './assets/download.png';
 
 function App() {
     const [search, setSearch] = useState("");
@@ -88,15 +91,25 @@ function App() {
     const handleCloseModal = () => {
         setOpenModal(false);
         setPostFormState({
-          user: "",
-          content: "",
-          hashtags: []
+            user: "",
+            content: "",
+            hashtags: []
         });
-      };
+    };
 
     return (
-        <>
-            <Typography variant="h6" align="center" gutterBottom sx={{ fontWeight: 'bold' }}>
+        <div style={{ backgroundColor: '#fffdfb' }}>
+
+            <CardMedia
+                component="img"
+                image={TTAGZLogo}
+                alt="Hashtag Search App"
+                sx={{
+                    objectFit: 'contain',
+                    height: '100px',
+                }}
+            />
+            <Typography variant="h6" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#2f1a44', mt: 1 }}>
                 Hashtag Search App
             </Typography>
 
@@ -112,7 +125,19 @@ function App() {
             </Stack>
 
             <Stack alignItems="center" sx={{ px: 3 }}>
-                <Button variant="contained" onClick={() => setOpenModal(true)}>
+                <Button
+                    variant="contained"
+                    onClick={() => setOpenModal(true)}
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: '1rem',
+                        textTransform: 'none',
+                        backgroundColor: '#724cf9',
+                        "&:hover": {
+                            backgroundColor: '#724cf9',
+                        },
+                    }}
+                >
                     Create Post
                 </Button>
             </Stack>
@@ -146,7 +171,9 @@ function App() {
             </Stack>
 
             <Dialog open={openModal} fullWidth={true} onClose={handleCloseModal}>
-                <DialogTitle>Subscribe</DialogTitle>
+                <DialogTitle>
+                    Create Post
+                </DialogTitle>
                 <DialogContent>
                     <Stack spacing={2}>
                         <TextField
@@ -182,18 +209,36 @@ function App() {
                     </Stack>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseModal}>
+                    <Button
+                        onClick={handleCloseModal}
+                        sx={{
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            color: '#724cf9',
+                            "&:hover": {
+                                color: '#724cf9',
+                            },
+                        }}
+                    >
                         Cancel
                     </Button>
                     <Button
                         variant="contained"
                         onClick={() => handleCreatePost(postFormState)}
+                        sx={{
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            backgroundColor: '#724cf9',
+                            "&:hover": {
+                                backgroundColor: '#724cf9',
+                            },
+                        }}
                     >
                         Post
                     </Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </div>
     )
 }
 

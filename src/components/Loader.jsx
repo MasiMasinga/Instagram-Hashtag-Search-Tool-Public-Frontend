@@ -4,7 +4,7 @@ import Stack from '@mui/material/Box';
 const Loader = () => {
     return (
         <Stack alignItems="center">
-            <CircularProgress />
+            <CircularProgress sx={{ color: '#724cf9' }} />
         </Stack>
     );
 }
